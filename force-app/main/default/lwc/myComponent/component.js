@@ -5,12 +5,17 @@ export default function () {
   const { counter, setCounter } = useState(0);
 
   useEffect(() => {
-    setInterval(() => {
+    const loop = setInterval(() => {
       setCounter((old) => {
         const newValue = old + 1;
         setLabel(`${label} - ${newValue}`);
         return newValue;
       });
     }, this.period);
+
+    return () => {
+      clearInterval(loop);
+      console.log("cleared loop", loop);
+    };
   }, []);
 }

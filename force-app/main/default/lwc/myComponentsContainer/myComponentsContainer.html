@@ -1,5 +1,20 @@
 <template>
-  <c-my-component period="1000"></c-my-component>
-  <c-my-component period="200"></c-my-component>
-  <c-my-component period="500"></c-my-component>
+  <div>
+    <input type="checkbox" name="enable1" onchange={handleChange} />
+    <template if:true={enable1}>
+      <c-my-component period="1000"></c-my-component>
+    </template>
+  </div>
+  <div>
+    <input type="checkbox" name="enable2" onchange={handleChange} />
+    <template if:true={enable2}>
+      <c-my-component period="200"></c-my-component>
+    </template>
+  </div>
+  <div>
+    <input type="checkbox" name="enable3" onchange={handleChange} />
+    <template if:true={enable3}>
+      <c-my-component period="500"></c-my-component>
+    </template>
+  </div>
 </template>

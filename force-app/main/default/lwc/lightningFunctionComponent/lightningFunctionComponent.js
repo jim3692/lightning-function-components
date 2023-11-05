@@ -51,6 +51,12 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
 
       return super.render();
     }
+
+    disconnectedCallback() {
+      this.__effects
+        .filter((effect) => effect.onCleanup)
+        .forEach((effect) => effect.onCleanup());
+    }
   };
 }
 
