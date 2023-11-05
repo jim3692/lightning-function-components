@@ -9,6 +9,8 @@ export default class LightningFunctionComponent extends LightningElement {
 const STATE_HANDLER_VALUE = 0;
 const STATE_HANDLER_SET_VALUE = 1;
 
+let currentComponent = null;
+
 class StateSetter {
   component;
   stateIdx;
@@ -100,60 +102,11 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
 
     state = {};
 
-    useState(defaultValue) {
-      const i = this.__statesCounter;
-
-      if (!this.__states[i]) {
-        this.__states.push(defaultValue);
-        const { setState } = new StateSetter(this, i);
-
-        const handler = new StateHandler({
-          state: this.state,
-          defaultValue: defaultValue,
-          onSetValue: setState,
-        });
-        const newStateProxy = new Proxy({}, handler);
-        this.__statesProxies.push(newStateProxy);
-      }
-
-      this.__statesCounter++;
-      return this.__statesProxies[i];
-    }
-
-    useEffect(callback, dependencies) {
-      const i = this.__effectsCounter;
-
-      if (!this.__effects[i]) {
-        this.__effects.push({ callback, dependencies });
-        this.__effectsCounter++;
-        return;
-      }
-
-      const effect = this.__effects[i];
-
-      if (effect.hasDependencies && effect.dependencies.length > 0) {
-        const hasChangedDeps = !dependencies.every((el, idx) =>
-          Object.is(el, effect.lastState[idx]),
-        );
-        if (hasChangedDeps) {
-          effect.lastState = [...effect.dependencies];
-          this.__effectsQueue.push(() => {
-            effect.onCleanup = effect.callback();
-          });
-        }
-      } else if (!effect.hasDependencies) {
-        this.__effectsQueue.push(() => {
-          effect.onCleanup = effect.callback();
-        });
-      }
-
-      this.__effectsCounter++;
-    }
-
     render() {
       this.__statesCounter = 0;
       this.__effectsCounter = 0;
 
+      currentComponent = this;
       const templateToRender = funCmp.call(this);
 
       if (this.__firstRun) {
@@ -176,4 +129,54 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
       return super.render();
     }
   };
+}
+
+export function useState(defaultValue) {
+  const i = currentComponent.__statesCounter;
+
+  if (!currentComponent.__states[i]) {
+    currentComponent.__states.push(defaultValue);
+    const { setState } = new StateSetter(currentComponent, i);
+
+    const handler = new StateHandler({
+      state: currentComponent.state,
+      defaultValue: defaultValue,
+      onSetValue: setState,
+    });
+    const newStateProxy = new Proxy({}, handler);
+    currentComponent.__statesProxies.push(newStateProxy);
+  }
+
+  currentComponent.__statesCounter++;
+  return currentComponent.__statesProxies[i];
+}
+
+export function useEffect(callback, dependencies) {
+  const i = currentComponent.__effectsCounter;
+
+  if (!currentComponent.__effects[i]) {
+    currentComponent.__effects.push({ callback, dependencies });
+    currentComponent.__effectsCounter++;
+    return;
+  }
+
+  const effect = currentComponent.__effects[i];
+
+  if (effect.hasDependencies && effect.dependencies.length > 0) {
+    const hasChangedDeps = !dependencies.every((el, idx) =>
+      Object.is(el, effect.lastState[idx]),
+    );
+    if (hasChangedDeps) {
+      effect.lastState = [...effect.dependencies];
+      currentComponent.__effectsQueue.push(() => {
+        effect.onCleanup = effect.callback();
+      });
+    }
+  } else if (!effect.hasDependencies) {
+    currentComponent.__effectsQueue.push(() => {
+      effect.onCleanup = effect.callback();
+    });
+  }
+
+  currentComponent.__effectsCounter++;
 }

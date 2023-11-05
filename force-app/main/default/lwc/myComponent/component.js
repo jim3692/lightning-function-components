@@ -1,14 +1,16 @@
-export default function () {
-  const { label, setLabel } = this.useState("counter");
-  const { counter, setCounter } = this.useState(0);
+import { useEffect, useState } from "c/lightningFunctionComponent";
 
-  this.useEffect(() => {
+export default function () {
+  const { label, setLabel } = useState("counter");
+  const { counter, setCounter } = useState(0);
+
+  useEffect(() => {
     setInterval(() => {
       setCounter((old) => {
         const newValue = old + 1;
         setLabel(`${label} - ${newValue}`);
         return newValue;
       });
-    }, 1000);
+    }, this.period);
   }, []);
 }
