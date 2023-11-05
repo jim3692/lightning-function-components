@@ -7,9 +7,9 @@ export default class MyComponent extends LightningFunctionComponentMixin(
   LightningElement,
   component,
 ) {
-  @api period
+  @api period;
 
-  connectedCallback () {
-    console.log(this.period)
+  connectedCallback() {
+    console.log(this.period);
   }
 }
