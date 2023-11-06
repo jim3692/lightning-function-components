@@ -1,5 +1,3 @@
-import { WireAdapter } from "../util/wire-adapter";
-
 class DataCallback {
   component;
   wireIdx;
@@ -7,7 +5,7 @@ class DataCallback {
   constructor(component, wireIdx) {
     this.component = component;
     this.wireIdx = wireIdx;
-    this.handle = this.callback.bind(this);
+    this.callback = this.callback.bind(this);
   }
 
   callback(value) {
@@ -18,17 +16,19 @@ class DataCallback {
   }
 }
 
-export default function useWire(Adapter, config) {
+export default function useWire(adapter, config) {
   const i = this.__wiresCounter;
 
   if (!this.__wires[i]) {
-    const { dataCallback } = new DataCallback(this, i);
+    const { callback } = new DataCallback(this, i);
 
-    const newWire = new Adapter(dataCallback);
-    newWire.connect();
-
-    this.__wires.push(newWire);
+    adapter(config).then(callback)
+    this.__wires.push(adapter);
     this.__wireFields = [...this.__wireFields, config];
+  }
+
+  if (!Object.is(config, this.__wireFields[i])) {
+    this.__wires[i](config).then(callback)
   }
 
   this.__wiresCounter++;

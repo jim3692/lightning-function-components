@@ -1,10 +1,8 @@
-import { LightningElement, wire } from "lwc";
+import { LightningElement } from "lwc";
 
 import useStateImpl from "./hooks/use-state";
 import useEffectImpl from "./hooks/use-effect";
 import useWireImpl from "./hooks/use-wire";
-
-import { WireAdapter } from "./util/wire-adapter";
 
 export default class LightningFunctionComponent extends LightningElement {
   constructor() {
@@ -28,9 +26,6 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     __wireFields = [];
     __wiresData = [];
     __wiresCounter = 0;
-    __wireAdapter = null;
-    @wire(WireAdapter, { component: "$__self", data: "$__wireFields" })
-    __wiredCallback() {}
 
     __firstRun = true;
 
@@ -43,6 +38,7 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     render() {
       this.__statesCounter = 0;
       this.__effectsCounter = 0;
+      this.__wiresCounter = 0;
 
       currentComponent = this;
       const templateToRender = funCmp.call(this);
