@@ -12,9 +12,9 @@ import ACCOUNT_NAME_FIELD from "@salesforce/schema/Account.Name";
 const INITIAL_LABEL = "counter";
 
 export default function () {
-  const { label, setLabel } = useState("");
-  const { counter, setCounter } = useState(0);
-  const { accountConfig, setAccountConfig } = useState({
+  const [label, setLabel] = useState("");
+  const [counter, setCounter] = useState(0);
+  const [accountConfig, setAccountConfig] = useState({
     recordId: "0017Q00000H7PNJQA3",
     fields: [ACCOUNT_NAME_FIELD],
   });
