@@ -4,6 +4,7 @@ import useStateImpl from "./hooks/use-state";
 import useEffectImpl from "./hooks/use-effect";
 import useApexImpl from "./hooks/use-apex";
 import useRefImpl from "./hooks/use-ref";
+import useLwcStateImpl from "./hooks/use-lwc-state";
 
 export default class LightningFunctionComponent extends LightningElement {
   constructor() {
@@ -74,4 +75,8 @@ export function useApex() {
 
 export function useRef() {
   return useRefImpl.call(currentComponent, ...arguments);
+}
+
+export function useLwcState() {
+  return useLwcStateImpl.call(currentComponent, ...arguments);
 }

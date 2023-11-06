@@ -3,6 +3,7 @@ import {
   useState,
   useApex,
   useRef,
+  useLwcState,
 } from "c/lightningFunctionComponent";
 
 import getAccount from "@salesforce/apex/MyAuraEnabledClass.getAccount";
@@ -17,6 +18,8 @@ export default function () {
     recordId: "0017Q00000H7PNJQA3",
     fields: [ACCOUNT_NAME_FIELD],
   });
+
+  useLwcState({ label });
 
   const account = useApex(getAccount, accountConfig);
 

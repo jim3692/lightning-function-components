@@ -24,7 +24,6 @@ class StateSetter {
 }
 
 class StateHandler {
-  state;
   value;
   onSetValue;
 
@@ -33,8 +32,7 @@ class StateHandler {
   nameOfValue;
   nameOfSetValue;
 
-  constructor({ state, defaultValue, onSetValue }) {
-    this.state = state;
+  constructor({ defaultValue, onSetValue }) {
     this.value = defaultValue;
     this.onSetValue = onSetValue;
     this.nextToGet = STATE_HANDLER_VALUE;
@@ -47,7 +45,6 @@ class StateHandler {
     }
 
     if (prop === this.nameOfValue) {
-      this.state[prop] = this.value;
       return this.value;
     }
 
@@ -86,7 +83,6 @@ export default function useState(defaultValue) {
     const { setState } = new StateSetter(this, i);
 
     const handler = new StateHandler({
-      state: this.state,
       defaultValue: defaultValue,
       onSetValue: setState,
     });
