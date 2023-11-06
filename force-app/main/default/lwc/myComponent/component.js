@@ -1,10 +1,17 @@
-import { useEffect, useState, useApex } from "c/lightningFunctionComponent";
+import {
+  useEffect,
+  useState,
+  useApex,
+  useRef,
+} from "c/lightningFunctionComponent";
 
 import getAccount from "@salesforce/apex/MyAuraEnabledClass.getAccount";
 import ACCOUNT_NAME_FIELD from "@salesforce/schema/Account.Name";
 
+const INITIAL_LABEL = "counter";
+
 export default function () {
-  const { label, setLabel } = useState("counter");
+  const { label, setLabel } = useState("");
   const { counter, setCounter } = useState(0);
   const { accountConfig, setAccountConfig } = useState({
     recordId: "0017Q00000H7PNJQA3",
@@ -15,11 +22,7 @@ export default function () {
 
   useEffect(() => {
     const loop = setInterval(() => {
-      setCounter((old) => {
-        const newValue = old + 1;
-        setLabel(`${label} - ${newValue}`);
-        return newValue;
-      });
+      setCounter((old) => old + 1);
     }, this.period);
 
     return () => {
@@ -28,5 +31,11 @@ export default function () {
     };
   }, []);
 
-  console.log(JSON.stringify(account));
+  useEffect(() => {
+    setLabel(`${INITIAL_LABEL} - ${counter}`);
+  }, [counter]);
+
+  useEffect(() => {
+    console.log(JSON.stringify(account));
+  }, [account]);
 }
