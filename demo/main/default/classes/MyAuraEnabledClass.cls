@@ -23,4 +23,9 @@ public with sharing class MyAuraEnabledClass {
         return Database.query(query);
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAllAccounts() {
+        return [SELECT Id, Name FROM Account];
+    }
+
 }
