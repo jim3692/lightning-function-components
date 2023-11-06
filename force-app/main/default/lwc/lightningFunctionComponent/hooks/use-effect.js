@@ -5,7 +5,7 @@ export default function useEffect(callback, dependencies) {
     this.__effects.push({
       lastState: dependencies,
       hasDependencies: !!dependencies,
-      onCleanup: callback()
+      onCleanup: callback(),
     });
     this.__effectsCounter++;
     return;
