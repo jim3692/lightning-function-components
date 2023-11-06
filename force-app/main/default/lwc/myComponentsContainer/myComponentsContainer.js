@@ -1,18 +1,9 @@
 import { LightningElement, wire, track } from "lwc";
 
 export default class MyComponentsContainer extends LightningElement {
-  @track enable1;
-  @track enable2;
-  @track enable3;
-
-  recordId;
-
-  @wire(getRecord, { recordId: "$recordId", fields: [ACCOUNT_NAME_FIELD] })
-  record;
-
-  connectedCallback() {
-    this.recordId = "0017Q00000H7PNJQA3";
-  }
+  @track enable1 = true;
+  @track enable2 = true;
+  @track enable3 = true;
 
   handleChange(event) {
     switch (event.target.name) {

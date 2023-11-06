@@ -2,7 +2,7 @@ import { LightningElement } from "lwc";
 
 import useStateImpl from "./hooks/use-state";
 import useEffectImpl from "./hooks/use-effect";
-import useWireImpl from "./hooks/use-wire";
+import useApexImpl from "./hooks/use-apex";
 
 export default class LightningFunctionComponent extends LightningElement {
   constructor() {
@@ -22,10 +22,10 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     __effectsCounter = 0;
     __effectsQueue = [];
 
-    __wires = [];
-    __wireFields = [];
-    __wiresData = [];
-    __wiresCounter = 0;
+    __apexAdapters = [];
+    __apexAdaptersFields = [];
+    __apexAdapterData = [];
+    __apexAdaptersCounter = 0;
 
     __firstRun = true;
 
@@ -38,7 +38,7 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     render() {
       this.__statesCounter = 0;
       this.__effectsCounter = 0;
-      this.__wiresCounter = 0;
+      this.__apexAdaptersCounter = 0;
 
       currentComponent = this;
       const templateToRender = funCmp.call(this);
@@ -67,8 +67,6 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
       this.__effects
         .filter((effect) => effect.onCleanup)
         .forEach((effect) => effect.onCleanup());
-
-      this.__wires.forEach((w) => w.disconnect());
     }
   };
 }
@@ -81,6 +79,6 @@ export function useEffect() {
   return useEffectImpl.call(currentComponent, ...arguments);
 }
 
-export function useWire() {
-  return useWireImpl.call(currentComponent, ...arguments);
+export function useApex() {
+  return useApexImpl.call(currentComponent, ...arguments);
 }
