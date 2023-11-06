@@ -1,5 +1,8 @@
 export default function useLwcState(i, state) {
-  const allKeys = new Set([...Reflect.ownKeys(state), ...Reflect.ownKeys(this.state)]);
+  const allKeys = new Set([
+    ...Reflect.ownKeys(state),
+    ...Reflect.ownKeys(this.state),
+  ]);
 
   const diffs = [];
   Array.from(allKeys).forEach((k) => {
