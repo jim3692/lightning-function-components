@@ -26,14 +26,11 @@ class StateSetter {
   }
 }
 
-export default function useState(defaultValue) {
-  const i = this.__statesCounter;
-
+export default function useState(i, defaultValue) {
   if (!this.__states[i]) {
     const { setState } = new StateSetter(this, i);
     this.__states.push([defaultValue, setState]);
   }
 
-  this.__statesCounter++;
   return this.__states[i];
 }

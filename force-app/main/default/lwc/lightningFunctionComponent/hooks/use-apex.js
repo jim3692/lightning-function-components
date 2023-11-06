@@ -34,9 +34,7 @@ class ApexHandler {
   }
 }
 
-export default function useApex(adapter, config) {
-  const i = this.__apexAdaptersCounter;
-
+export default function useApex(i, adapter, config) {
   if (!this.__apexAdapters[i]) {
     const handler = new ApexHandler(this, i);
     this.__apexAdapters.push({
@@ -53,6 +51,5 @@ export default function useApex(adapter, config) {
     this.__apexAdapters[i].handler.runUpdate();
   }
 
-  this.__apexAdaptersCounter++;
   return this.__apexAdapterData[i];
 }

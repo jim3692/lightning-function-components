@@ -62,21 +62,46 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
 }
 
 export function useState() {
-  return useStateImpl.call(currentComponent, ...arguments);
+  const result = useStateImpl.call(
+    currentComponent,
+    currentComponent.__statesCounter,
+    ...arguments,
+  );
+  currentComponent.__statesCounter++;
+  return result;
 }
 
 export function useEffect() {
-  return useEffectImpl.call(currentComponent, ...arguments);
+  const result = useEffectImpl.call(
+    currentComponent,
+    currentComponent.__effectsCounter,
+    ...arguments,
+  );
+  currentComponent.__effectsCounter++;
+  return result;
 }
 
 export function useApex() {
-  return useApexImpl.call(currentComponent, ...arguments);
+  const result = useApexImpl.call(
+    currentComponent,
+    currentComponent.__apexAdaptersCounter,
+    ...arguments,
+  );
+  currentComponent.__apexAdaptersCounter++;
+  return result;
 }
 
 export function useRef() {
-  return useRefImpl.call(currentComponent, ...arguments);
+  const result = useRefImpl.call(
+    currentComponent,
+    currentComponent.__refsCounter,
+    ...arguments,
+  );
+  currentComponent.__refsCounter++;
+  return result;
 }
 
 export function useLwcState() {
-  return useLwcStateImpl.call(currentComponent, ...arguments);
+  const result = useLwcStateImpl.call(currentComponent, 0, ...arguments);
+  return result;
 }

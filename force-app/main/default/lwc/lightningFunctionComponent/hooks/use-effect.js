@@ -1,13 +1,10 @@
-export default function useEffect(callback, dependencies) {
-  const i = this.__effectsCounter;
-
+export default function useEffect(i, callback, dependencies) {
   if (!this.__effects[i]) {
     this.__effects.push({
       lastState: dependencies,
       hasDependencies: !!dependencies,
       onCleanup: callback(),
     });
-    this.__effectsCounter++;
     return;
   }
 
@@ -26,6 +23,4 @@ export default function useEffect(callback, dependencies) {
     effect.onCleanup && effect.onCleanup();
     effect.onCleanup = callback();
   }
-
-  this.__effectsCounter++;
 }
