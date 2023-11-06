@@ -5,6 +5,7 @@ import useEffectImpl from "./hooks/use-effect";
 import useApexImpl from "./hooks/use-apex";
 import useRefImpl from "./hooks/use-ref";
 import useLwcStateImpl from "./hooks/use-lwc-state";
+import useEventImpl from "./hooks/use-event";
 
 export default class LightningFunctionComponent extends LightningElement {
   constructor() {
@@ -31,6 +32,8 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     __refs = [];
     __refsCounter = 0;
 
+    __events = {};
+
     get __self() {
       return this;
     }
@@ -51,6 +54,33 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
       }
 
       return super.render();
+    }
+
+    renderedCallback() {
+      const eventsRegEx = /^events-([a-z-]+[a-z])$/;
+      const elementsWithoutEventHandler = [
+        ...this.template.querySelectorAll(":not([events--handled])"),
+      ];
+
+      for (const el of elementsWithoutEventHandler) {
+        const attributeNames = [...el.attributes].map((attr) => attr.name);
+        for (const name of attributeNames) {
+          if (!eventsRegEx.test(name)) {
+            continue;
+          }
+
+          const [_, eventName] = name.match(eventsRegEx);
+
+          const handlerName = el.getAttribute(name);
+          const handler = this.__events[handlerName];
+          if (!handler) {
+            continue;
+          }
+
+          el.addEventListener(eventName, handler);
+          el.setAttribute("events--handled", true);
+        }
+      }
     }
 
     disconnectedCallback() {
@@ -103,5 +133,10 @@ export function useRef() {
 
 export function useLwcState() {
   const result = useLwcStateImpl.call(currentComponent, 0, ...arguments);
+  return result;
+}
+
+export function useEvent() {
+  const result = useEventImpl.call(currentComponent, 0, ...arguments);
   return result;
 }

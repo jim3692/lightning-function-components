@@ -4,6 +4,7 @@ import {
   useApex,
   useRef,
   useLwcState,
+  useEvent,
 } from "c/lightningFunctionComponent";
 
 import getAccount from "@salesforce/apex/MyAuraEnabledClass.getAccount";
@@ -22,6 +23,12 @@ export default function () {
   useLwcState({ label });
 
   const account = useApex(getAccount, accountConfig);
+
+  const counterRef = useRef(counter)
+  counterRef.current = counter
+  useEvent("handleClick", () => {
+    alert(`counter: ${counterRef.current}`);
+  });
 
   useEffect(() => {
     const loop = setInterval(() => {
