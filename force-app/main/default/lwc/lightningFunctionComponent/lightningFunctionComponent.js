@@ -3,6 +3,7 @@ import { LightningElement } from "lwc";
 import useStateImpl from "./hooks/use-state";
 import useEffectImpl from "./hooks/use-effect";
 import useApexImpl from "./hooks/use-apex";
+import useRefImpl from "./hooks/use-ref";
 
 export default class LightningFunctionComponent extends LightningElement {
   constructor() {
@@ -20,14 +21,14 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
 
     __effects = [];
     __effectsCounter = 0;
-    __effectsQueue = [];
 
     __apexAdapters = [];
     __apexAdaptersFields = [];
     __apexAdapterData = [];
     __apexAdaptersCounter = 0;
 
-    __firstRun = true;
+    __refs = [];
+    __refsCounter = 0;
 
     get __self() {
       return this;
@@ -39,22 +40,10 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
       this.__statesCounter = 0;
       this.__effectsCounter = 0;
       this.__apexAdaptersCounter = 0;
+      this.__refsCounter = 0;
 
       currentComponent = this;
       const templateToRender = funCmp.call(this);
-
-      if (this.__firstRun) {
-        this.__effects.forEach((effect) => {
-          effect.hasDependencies = !!effect.dependencies;
-          effect.lastState = effect.dependencies && [...effect.dependencies];
-          effect.onCleanup = effect.callback();
-        });
-
-        this.__firstRun = false;
-      } else {
-        this.__effectsQueue.forEach((f) => f());
-      }
-      this.__effectsQueue = [];
 
       if (templateToRender !== undefined) {
         return templateToRender;
@@ -81,4 +70,8 @@ export function useEffect() {
 
 export function useApex() {
   return useApexImpl.call(currentComponent, ...arguments);
+}
+
+export function useRef() {
+  return useRefImpl.call(currentComponent, ...arguments);
 }
