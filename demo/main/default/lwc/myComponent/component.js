@@ -7,8 +7,12 @@ import {
   useEvent,
 } from "c/lightningFunctionComponent";
 
+import { useReact } from "c/reactComponent";
+
 import getAccount from "@salesforce/apex/MyAuraEnabledClass.getAccount";
 import ACCOUNT_NAME_FIELD from "@salesforce/schema/Account.Name";
+
+import reactApp from "@salesforce/resourceUrl/reactApp";
 
 const INITIAL_LABEL = "counter";
 
@@ -21,11 +25,12 @@ export default function () {
   });
 
   useLwcState({ label });
+  useReact(reactApp);
 
   const account = useApex(getAccount, accountConfig);
 
-  const counterRef = useRef(counter)
-  counterRef.current = counter
+  const counterRef = useRef(counter);
+  counterRef.current = counter;
   useEvent("handleClick", () => {
     alert(`counter: ${counterRef.current}`);
   });

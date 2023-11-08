@@ -2,8 +2,8 @@ import { LightningElement, wire, track } from "lwc";
 
 export default class MyComponentsContainer extends LightningElement {
   @track enable1 = true;
-  @track enable2 = true;
-  @track enable3 = true;
+  @track enable2 = false;
+  @track enable3 = false;
 
   handleChange(event) {
     switch (event.target.name) {

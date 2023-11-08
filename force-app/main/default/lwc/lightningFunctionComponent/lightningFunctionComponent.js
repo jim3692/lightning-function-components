@@ -15,6 +15,10 @@ export default class LightningFunctionComponent extends LightningElement {
 
 let currentComponent = null;
 
+export function getCurrentComponent() {
+  return currentComponent;
+}
+
 export function LightningFunctionComponentMixin(BaseClass, funCmp) {
   return class extends BaseClass {
     __states = [];
@@ -63,7 +67,7 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
           effect.onCleanup && effect.onCleanup();
           effect.onCleanup = callback();
         } catch (err) {
-          console.error(err.message)
+          console.error(err.message);
         }
       }
       this.__effectsQueue = [];
