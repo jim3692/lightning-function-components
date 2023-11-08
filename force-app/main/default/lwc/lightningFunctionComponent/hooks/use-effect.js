@@ -1,10 +1,12 @@
 export default function useEffect(i, callback, dependencies) {
   if (!this.__effects[i]) {
-    this.__effects.push({
+    const effect = {
       lastState: dependencies,
       hasDependencies: !!dependencies,
-      onCleanup: callback(),
-    });
+    };
+
+    this.__effects.push(effect);
+    this.__effectsQueue.push({ effect, callback });
     return;
   }
 
@@ -16,11 +18,9 @@ export default function useEffect(i, callback, dependencies) {
     );
     if (hasChangedDeps) {
       effect.lastState = [...dependencies];
-      effect.onCleanup && effect.onCleanup();
-      effect.onCleanup = callback();
+      this.__effectsQueue.push({ effect, callback });
     }
   } else if (!effect.hasDependencies) {
-    effect.onCleanup && effect.onCleanup();
-    effect.onCleanup = callback();
+    this.__effectsQueue.push({ effect, callback });
   }
 }

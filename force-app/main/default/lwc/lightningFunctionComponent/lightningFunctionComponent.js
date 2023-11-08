@@ -23,6 +23,7 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
 
     __effects = [];
     __effectsCounter = 0;
+    __effectsQueue = [];
 
     __apexAdapters = [];
     __apexAdaptersFields = [];
@@ -57,6 +58,16 @@ export function LightningFunctionComponentMixin(BaseClass, funCmp) {
     }
 
     renderedCallback() {
+      for (const { effect, callback } of this.__effectsQueue) {
+        try {
+          effect.onCleanup && effect.onCleanup();
+          effect.onCleanup = callback();
+        } catch (err) {
+          console.error(err.message)
+        }
+      }
+      this.__effectsQueue = [];
+
       const eventsRegEx = /^events-([a-z-]+[a-z])$/;
       const elementsWithoutEventHandler = [
         ...this.template.querySelectorAll(":not([events--handled])"),
